@@ -1,7 +1,7 @@
 const joi = require('joi');
 
 function errorResponse(res, message, statusCode, details = null) {
-    return res.status(status).json({
+    return res.status(statusCode).json({
         success: false,
         message,
         data: null,
@@ -21,7 +21,7 @@ const idSchema = joi.object({
 
 function validateBody(schema) {
     return (req, res, next) => {
-        const { error } = schema.validate(req.body, {
+        const { error, value } = schema.validate(req.body, {
             abortEarly: false,
             convert: true,
             allowUnknown: false
@@ -38,6 +38,7 @@ function validateBody(schema) {
                 }))
             );
         }
+
         req.body = value;
         next();
     };
@@ -63,4 +64,4 @@ function validateParams(schema) {
     };
 }
 
-module.exports = {komikSchema, idSchema, validateBody, validateParams};
+module.exports = { komikSchema, idSchema, validateBody, validateParams };
